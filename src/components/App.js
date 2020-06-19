@@ -3,6 +3,7 @@ import SearchBar from './SearchBar';
 import ImageList from './ImageList';
 import axios from 'axios';
 import '../App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 class App extends React.Component  {
   state = { images: [] };
