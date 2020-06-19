@@ -1,7 +1,9 @@
 import React from 'react';
 import SearchBar from './SearchBar';
+import ImageList from './ImageList';
 import axios from 'axios';
 import '../App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 class App extends React.Component  {
   state = { images: [] };
@@ -22,6 +24,7 @@ class App extends React.Component  {
           <div>
               <SearchBar userSubmit={this.onSearchSubmit}/>
               <span>Found: {this.state.images.length} images</span>
+              <ImageList foundImages={this.state.images} />
           </div>
       )
   }
