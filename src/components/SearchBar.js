@@ -1,31 +1,99 @@
 import React from 'react';
-import Form from 'react-bootstrap/Form'
-import Col from 'react-bootstrap/Col'
+import Autosuggest from 'react-autosuggest';
+import './SearchBar.css';
+
+
+
+const suggestionsList = [
+	{
+		name: 'island',
+	},
+	{
+		name: 'islands',
+	},
+	{
+		name: 'islands of thailand',
+	},
+	{
+		name: 'islands of greece',
+	},
+];
+
+const getSuggestions = value => {
+	const inputValue = value.trim().toLowerCase();
+	const inputLength = inputValue.length;
+
+	return inputLength === 0 ? [] : suggestionsList.filter(list =>
+		list.name.toLowerCase().slice(0, inputLength) === inputValue
+	);
+};
+
+const getSuggestionValue = suggestion => suggestion.name;
+
+const renderSuggestion = suggestion => (
+	<div>
+		{suggestion.name}
+	</div>
+);
 
 class SearchBar extends React.Component {
-	state = { val: '' };
+	constructor() {
+		super();
+		this.state = {
+			value: '',
+			suggestions: []
+		};
+	}
 
-	onInputChange = (event) => {
-		this.setState({ val: event.target.value });
+	onChange = (event, { newValue }) => {
+		this.setState({
+			value: newValue
+		});
 	};
+
+	onSuggestionsFetchRequested = ({ value }) => {
+		this.setState({
+			suggestions: getSuggestions(value)
+		});
+	};
+
+	onSuggestionsClearRequested = () => {
+		this.setState({
+			suggestions: []
+		});
+	};
+
+	shouldRenderSuggestions(value) {
+		return value.trim().length > 2;
+	}
 
 	onFormSubmit = (event) => {
 		event.preventDefault();
-		this.props.userSubmit(this.state.val);
+		this.props.userSubmit(this.state.value);
 	};
 
 	render() {
+		const { value, suggestions } = this.state;
+
+		const inputProps = {
+			placeholder: 'Search photos',
+			value,
+			onChange: this.onChange
+		};
+
 		return (
 			<div className="mx-auto py-3" style={{ width: "60%" }}>
-				<Form>
-					<Form.Row>
-						<Col>
-							<form onSubmit={this.onFormSubmit} className="flexContainer">
-								<Form.Control placeholder="Search photos" className="rounded-pill" size="lg" type="text" value={this.state.val} onChange={this.onInputChange} />
-							</form>
-						</Col>
-					</Form.Row>
-				</Form>
+				<form onSubmit={this.onFormSubmit}>
+					<Autosuggest
+						suggestions={suggestions}
+						onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+						onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+						getSuggestionValue={getSuggestionValue}
+						renderSuggestion={renderSuggestion}
+						inputProps={inputProps}
+						shouldRenderSuggestions={this.shouldRenderSuggestions}
+					/>
+				</form>
 			</div>
 		);
 	}
