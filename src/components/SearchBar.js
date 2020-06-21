@@ -17,6 +17,15 @@ const suggestionsList = [
 	{
 		name: 'islands of greece',
 	},
+	{
+		name: 'coral reef',
+	},
+	{
+		name: 'coral',
+	},
+	{
+		name: 'corgi',
+	},
 ];
 
 const getSuggestions = value => {
